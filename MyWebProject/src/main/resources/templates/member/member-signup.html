@@ -1,11 +1,193 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <meta charset="UTF-8">
 <title>Sign Up to ( project name here )</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+	crossorigin="anonymous">
+	</script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+	crossorigin="anonymous">
+	</script>
+<script>
+		
+		var submitCheckEmail = 0;
+		var submitCheckPassword= 0;
+		var submitCheckMemberId= 0;
+		var submitCheckMemberName= 0;
+		
+		const emailCheck = () =>{
+			const email = document.getElementById("memberEmail").value;
+			const checkResult = document.getElementById("email-check-result");
+			console.log("입력값 : ", email);
+			$.ajax({
+				type:"post",
+				url:"/member/email-check",
+				data:{
+					"memberEmail":email
+				},
+				success:function(res){
+					console.log("success",res)
+					if(res=="ok"){
+						console.log("Ok")
+						checkResult.style.color="green";
+						checkResult.innerHTML="can use this E-mail";
+						submitCheckEmail = 1;
+						console.log(submitCheckEmail);
+					}else{
+						console.log("NO")
+						checkResult.style.color="red";
+						checkResult.innerHTML="can't use this E-mail";
+						console.log(submitCheckEmail);
+					}
+				},
+				error: function(err){
+					console.log("error occured"+ err)
+				}
+			});
+		}
+		
+		
+		const passwordCheck = () =>{
+			const pw1 = document.getElementById("password1").value;
+			const pw2 = document.getElementById("password2").value; 
+			const pwCheckResult = document.getElementById("password-check-result");
+	
+			
+				if( pw1 == pw2 ){
+					if( pw1.length< 6 ){					
+						pwCheckResult.style.color="red";
+						pwCheckResult.innerHTML = " password is too short"
+						submitCheckPassword= 0;
+						console.log(submitCheckPassword);
+					}else{
+						pwCheckResult.style.color="green";
+						pwCheckResult.innerHTML = " password1 and password2 match"
+						submitCheckPassword= 1;
+						console.log(submitCheckPassword);
+					}
+				}else{
+					pwCheckResult.style.color="red";
+					pwCheckResult.innerHTML = " password1 and password2 must match"
+					submitCheckPassword= 0;
+					console.log(submitCheckPassword);
+				}	
+		}
+		
+		const memberIdCheck = () => {			
+			const memberId = document.getElementById("memberId").value;
+			const memberIdCheckResult = document.getElementById("memberid-check-result");
+			console.log("입력값 : ", memberId);
+			$.ajax({
+				type:"post",
+				url:"/member/memberid-check",
+				data:{
+					"memberId":memberId
+				},
+				success:function(res){
+					console.log("success",res)
+					if(res=="ok"){
+						console.log("Ok")
+						memberIdCheckResult.style.color="green";
+						memberIdCheckResult.innerHTML="can use this Id";
+						submitCheckMemberId = 1;
+						console.log(submitCheckMemberId);
+					}else{
+						console.log("NO")
+						memberIdCheckResult.style.color="red";
+						memberIdCheckResult.innerHTML="can't use this Id";
+						console.log(submitCheckMemberId);
+					}
+				},
+				error: function(err){
+					console.log("error occured"+ err)
+				}
+			});
+		}
+		
+		const memberNameCheck = () => {
+			const memberName = document.getElementById("memberName").value;
+			const memberNameCheckResult = document.getElementById("membername-check-result");
+			console.log("입력값 : ", memberName);
+			$.ajax({
+				type:"post",
+				url:"/member/membername-check",
+				data:{
+					"memberName":memberName
+				},
+				success:function(res){
+					console.log("success",res)
+					if(res=="ok"){
+						console.log("Ok")
+						memberNameCheckResult.style.color="green";
+						memberNameCheckResult.innerHTML="can use this Name";
+						submitCheckMemberName = 1;
+						console.log(submitCheckMemberName);
+					}else{
+						console.log("NO")
+						memberNameCheckResult.style.color="red";
+						memberNameCheckResult.innerHTML="can't use this Name";
+						console.log(submitCheckMemberName);
+					}
+				},
+				error: function(err){
+					console.log("error occured"+ err)
+				}
+			});
+		}		
+		
+
+		
+		const submitCheck = () => {
+
+			const submitCheckArray = [ submitCheckEmail, submitCheckPassword, submitCheckMemberId, submitCheckMemberName ];
+			const checkResult = submitCheckArray.includes(0);
+
+			console.log(submitCheckEmail);
+			console.log(submitCheckPassword);
+			console.log(submitCheckMemberId);
+			console.log(submitCheckMemberName);
+			
+			if( checkResult ){
+				alert(' 회원가입 실패');
+				return false;
+			}else{
+				alert(' 회원가입 성공');
+			}
+		}
+	</script>
 </head>
+
 <body>
-	<form>
+	member signUp page<hr>
+	
+	<form action="/member/signup" method="post" onsubmit="return submitCheck();">
+		email :<input type="text" id="memberEmail" name="memberEmail" onblur="emailCheck()"><br> 
+		<span id="email-check-result"></span><br><br>
+		
+		Please enter the ID you will use to log in to the site.<br>
+		ID :<input type="text" id="memberId" name="memberId" onblur="memberIdCheck()"><br>
+		<span id="memberid-check-result"></span><br><br>
+		
+		password1 and password2 must match<br>
+		password1 :<input type="password" id="password1" onblur="passwordCheck()"><br>
+		password2 :<input type="password" id="password2" name="memberPassword" onblur="passwordCheck()"><br> 
+		<span id="password-check-result"></span><br><br>
+		
+		Please enter the name you want to display to others on the page.<br>
+		name : <input type="text" id="memberName" name="memberName" onblur="memberNameCheck()"><br>
+		<span id="membername-check-result"></span><br><br>
+		<input type="submit"	value="Sign-Up">
 	</form>
 </body>
+
 </html>

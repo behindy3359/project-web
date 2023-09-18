@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>detail</title>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+		crossorigin="anonymous">
+	</script>
+	<script th:inline="javascript">
+		const commentWrite = () =>{
+			const writer = document.getElementById("commentWriter").value;
+			const contents = document.getElementById("commentContents").value;
+			const id = [[${board.id}]];
+			console.log(" 작성자 : "+ writer+", 내용 : "+contents)
+			$.ajax({
+				type: "post",
+				url: "/comment/save",
+				data:{
+					"commentWriter" : writer,
+					"commentContents" : contents,
+					"boardId": id
+				},
+				success: function(res){
+					console.log ( "success" );
+					let output = "<table class='commentTable'>";
+					output += "<tr><th>comment NO.</th>";
+					output += "<th>writer</th>";
+					output += "<th>contents</th>";
+					output += "<th>createdTime</th></tr>";
+					for(let i in res){
+						output += "<tr>";
+						output += "<td>"+res[i].id +"</td>";
+						output += "<td>"+res[i].commentWriter+"</td>";
+						output += "<td>"+res[i].commentContents+"</td>";
+						output += "<td>"+res[i].commentCreatedTime+"</td>";
+						output += "</tr>";
+					}
+					output += "</table>";
+					document.getElementById('comment-list').innerHTML =output;
+					document.getElementById('commentWriter').value ='';
+					document.getElementById('commentContents').value ='';
+				},
+				error: function(err){
+					console.log( "fail" );
+				}
+				
+			});
+		}
+	
+		const listReq = () => {
+			const page = [[ ${ page } ]]
+			location.href = "/board/paging?page="+page;
+		}
+		const updateReq = () => {
+			const id = [[ ${ board.id } ]];
+			location.href = "/board/update/" + id;
+		}
+		const deleteReq = () => {
+			const id = [[ ${ board.id } ]];
+			location.href = "/board/delete/" + id;
+		}
+	</script>
+</head>
+<body>
+here is board-detail page  HI!<a th:text="${session.loginName}"></a><hr> 
+	<table>
+		<tr>
+			<th>id</th>
+			<td th:text=" ${  board.id }"></td>
+		</tr>
+		<tr>
+			<th>title</th>
+			<td th:text=" ${  board.boardTitle }"></td>
+		</tr>
+		<tr>
+			<th>writer</th>
+			<td th:text=" ${  board.boardWriter }"></td>
+		</tr>
+		<tr>
+			<th>date</th>
+			<td th:text="*{#temporals.format(board.boardCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+		</tr>
+		<tr>
+			<th>contents</th>
+			<td th:text=" ${  board.boardContents }"></td>
+		</tr>
+		<tr th:if="${ board.fileAttached ==1 }">
+			<th>image</th>
+			<td th:each="fileName: ${board.storedFileName}"><img
+				th:src="@{|/upload/${fileName}|}" alt=""></td>
+		</tr>
+	</table>
+	<hr>
+	<button onclick="listReq()">목록</button>
+	<button onclick="updateReq()">수정</button>
+	<button onclick="deleteReq()">삭제</button>
+	<hr>
+	<div id="comment-write">
+		<input type="text" id="commentWriter" placeholder="작성자">
+		<input type="text" id="commentContents" placeholder="댓글 내용">
+		<button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
+	</div>
+	<div id="comment-list">
+		<table>
+			<tr>
+				<th>NO.</th>
+				<th>writer</th>
+				<th>contents</th>
+				<th>createdTime</th>
+			</tr>
+			<tr th:each="comment: ${commentList}">
+				<td th:text="${comment.id}"></td>
+				<td th:text="${comment.commentWriter}"></td>
+				<td th:text="${comment.commentContents}"></td>
+				<td th:text="*{#temporals.format(comment.commentCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>board-write</title>
+</head>
+<body>
+		here is board-write page            HI!<a th:text="${session.loginName}"></a><hr> 
+		<form action="/board/write" method="post" enctype="multipart/form-data">
+			writer: <input type="text" name ="boardWriter" th:value="${session.loginName}"> <br>
+			title: <input type="text" name ="boardTitle"> <br>
+			contents: <textarea name ="boardContents" cols="30" rows="10"></textarea><br>
+			file: <input type="file" name="boardFile" multiple><br>
+			<input type="submit" value="글 작성">
+		</form>
+</body>
+</html>

@@ -1,14 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>index</title>
+	<script th:inline="javascript">
+		const sign =() => {
+			const judgSign = /*[[${session.loginId}]]*/ 'default';
+
+			const memberState1 = document.getElementById("memberState1");
+			const memberState2 = document.getElementById("memberState2");
+			
+			if (judgSign==null||judgSign==0){
+				memberState1.innerHTML="로그인 또는 회원가입 해주세요.";
+				memberState2.innerHTML="<a href='/member/login'>Sign In</a><br><a href='/member/signup'>Sign Up</a>";
+			}else{
+				const loginName= /*[[${session.loginName}]]*/ 'default';
+				memberState1.innerHTML= loginName+"님 안녕하세요";
+				memberState2.innerHTML="<a href='/member/logout'>Logout</a>";
+			}
+		}
+	</script>
 </head>
-<body>
+<body onload="sign()">
 	here is index page<hr>
 	<a href="/board/list">to board</a><br>
 	<a href="/member/login">to sign in</a><br>
 	<a href="/member/signup">to sign up</a><br>
-	<a href="/main">to main</a>
+	<a href="/main">to main</a><br>
+	<a href="/member/list">to member list</a>
+	<hr>
+	<div id="memberState1"></div>
+	<div id="memberState2"></div>
 </body>
 </html>
