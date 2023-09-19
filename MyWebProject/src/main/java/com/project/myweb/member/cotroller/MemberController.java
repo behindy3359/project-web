@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
+
 
 import com.project.myweb.member.dto.MemberDTO;
 import com.project.myweb.member.service.MemberService;
@@ -62,7 +61,7 @@ public class MemberController {
 		} else {
 			// login 실패
 			System.out.println("login 실패");
-			return "redirect:/member/member-signin";
+			return "/member/member-signin";
 		}
 	}
 
@@ -108,11 +107,12 @@ public class MemberController {
 	}
 
 	@GetMapping("/delete/{id}")
-	public String deleteById(@PathVariable int id) {
+	public String deleteById(@PathVariable int id, HttpSession session) {
 
 		memberService.deleteById(id);
-
-		return "redirect:/member/member-list";
+		session.invalidate();
+		
+		return "/member/member-list";
 	}
 
 	@GetMapping("/logout")
@@ -143,7 +143,7 @@ public class MemberController {
 	public @ResponseBody String memberIdCheck(@RequestParam("memberId") String memberId) {
 		
 		System.out.println("memberId :" + memberId);
-		String checkResult=memberService.memberNameCheck(memberId);
+		String checkResult=memberService.memberIdCheck(memberId);
 		
 		return checkResult;
 	}

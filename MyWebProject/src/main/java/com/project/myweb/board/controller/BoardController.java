@@ -43,7 +43,7 @@ public class BoardController {
 
 		boardService.save(boardDTO, session);
 
-		return "/board/board-list";
+		return "/board/board-send-list";
 	}
 
 	// About browse board
@@ -94,11 +94,11 @@ public class BoardController {
 
 		boardService.delete(id);
 
-		return "redirect:/board/board-list";
+		return "/board/board-send-list";
 	}
 
 	// About paging
-	@GetMapping("")
+	@GetMapping("/paging")
 	public String paging(@PageableDefault(page = 1) Pageable pageable, Model model) {
 
 		int blockLimit = 3;

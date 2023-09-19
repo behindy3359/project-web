@@ -26,7 +26,7 @@
 	</table>
 	<a th:href="@{|/member/detail/${member.Id}|}">조회</a>
 	<a th:href="@{|/member/delete/${member.Id}|}">삭제</a>
-	<a th:href="@{|/member/update/${member.Id}|}">수정</a>
+	<a href="/member/update">수정</a>
 	
 	<hr>
 	session 값 확인 : <p th:text = "${session.loginName}"></p>

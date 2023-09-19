@@ -3,14 +3,22 @@
 <head>
 	<meta charset="UTF-8">
 	<title> update </title>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+	crossorigin="anonymous">
+	</script>
 	<script th:inline="javascript" >
 		const boardUpdate = () => {
 				document.updateForm.submit();
 		}
 		const idCheck = () => {
-			const loginId = 'default';
+			const loginId =[[${session.loginId}]]
+			const contentWriter = [[${boardUpdate.boardWriterId}]]
 			console.log(loginId);
-			
+			if( loginId != contentWriter){
+				alert('권한이 없습니다.');
+				window.history.back();	
+			}
 		}
 	</script>
 </head>
@@ -19,8 +27,7 @@
 	<form action="/board/update"  method="post"  name="updateForm" >
 		
 		<input type="hidden"  name="id" th:value="${boardUpdate.id}" >
-		Writer : <input type="text"  name="boardWriter" th:value="${ boardUpdate.boardWriter }" readonly><br>
-		Password : <input type="text"  name="boardPassword" id="boardPassword" ><br>
+		Writer : <input type="text"  id ="contentWriter" name="boardWriter" th:value="${ boardUpdate.boardWriter }" readonly><br>
 		Title: <input type="text"  name="boardTitle"  th:value="${ boardUpdate.boardTitle}"><br>
 		Contents:<textarea name="boardContents"  cols="30" rows="10" th:text="${boardUpdate.boardContents}" ></textarea><br>
 		
